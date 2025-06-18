@@ -15,7 +15,7 @@ class Student:
         return sum(self.grades) / len(self.grades)
 
     def __str__(self):
-        return f"{self.name} - Grades: {self.grades}, Average: {self.get_average():.2f}"
+        return f"{self.name} - Grades: {self.grades}\n Average: {self.get_average():.2f}"
 
 
 class GradeTracker:
@@ -43,7 +43,7 @@ class GradeTracker:
         else:
             print(f"Student '{name}' not found.")
 
-    def view_all_students(self):
+    def view_students(self):
         if not self.students:
             print("No students in the tracker.")
         else:
@@ -51,7 +51,7 @@ class GradeTracker:
             for student in self.students:
                 print(student)
 
-    def view_student_grades(self, name):
+    def view_grades(self, name):
         student = self.find_student(name)
         if student:
             print(f"\n{name}'s Grades: {student.grades}")
@@ -59,45 +59,51 @@ class GradeTracker:
             print(f"Student '{name}' not found.")
 
 
-def main():
-    tracker = GradeTracker()
+tracker = GradeTracker()
 
-    while True:
-        print("\n--- Grade Tracker Menu ---")
-        print("1. Add Student")
-        print("2. Add Grade")
-        print("3. View Student Grades")
-        print("4. View All Students")
-        print("5. Exit")
+while True:
+    print("\n------------------------")
+    print("  Student Grade Tracker")
+    print("------------------------")
+    print("1. Add Student")
+    print("2. Add Grade")
+    print("3. View Student Grades")
+    print("4. Calculate Average")
+    print("5. Exit")
 
-        choice = input("Enter your choice (1-5): ")
+    choice_input = input("Enter your choice (1-5): ")
+    if not choice_input.isdigit():
+        print("Invalid input. Please enter a number from 1 to 5.")
+        continue
 
-        if choice == '1':
-            name = input("Enter student's name: ")
-            tracker.add_student(name)
+    choice = int(choice_input)
 
-        elif choice == '2':
-            name = input("Enter student's name: ")
-            try:
-                grade = float(input("Enter grade (0-100): "))
-                tracker.add_grade(name, grade)
-            except ValueError:
-                print("Please enter a valid number for the grade.")
+    if choice == 1:
+        name = input("Enter Student Name to add: ")
+        tracker.add_student(name)
 
-        elif choice == '3':
-            name = input("Enter student's name: ")
-            tracker.view_student_grades(name)
+    elif choice == 2:
+        name = input("Enter student's name: ")
+        grade_input = input("Enter grade (0-100): ")
 
-        elif choice == '4':
-            tracker.view_all_students()
-
-        elif choice == '5':
-            print("Exiting Grade Tracker. Goodbye!")
-            break
-
+        try_float = grade_input.replace('.', '', 1).isdigit() and grade_input.count('.') <= 1
+        if try_float:
+            grade = float(grade_input)
+            tracker.add_grade(name, grade)
+            print("Grade Added!")
         else:
-            print("Invalid choice. Please select from 1 to 5.")
+            print("Please enter a valid number for the grade.")
 
+    elif choice == 3:
+        name = input("Enter student's name: ")
+        tracker.view_grades(name)
 
-if __name__ == "__main__":
-    main()
+    elif choice == 4:
+        tracker.view_students()
+
+    elif choice == 5:
+        print("Exiting Grade Tracker. Goodbye!")
+        break
+
+    else:
+        print("Invalid choice. Please select from 1 to 5.")
